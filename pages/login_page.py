@@ -140,6 +140,3 @@ else:
                     st.success(message)
                 else:
                     st.error(message)
-    
-    # Demo credentials info
-    st.info("💡 **Demo Tip**: Try username: `demo` and password: `demo123` to test the app!")
