@@ -4,10 +4,42 @@ import folium
 from streamlit_folium import st_folium
 import math
 import json
+import os
 
 # 1. DATABASE (The Store-Centric JSON we built)
 with open('stores.json', 'r') as f:
     STORES_DB = json.load(f)
+
+# Initialize session state
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+if 'current_user' not in st.session_state:
+    st.session_state.current_user = None
+
+# Users database file
+USERS_DB = 'users_data.json'
+
+def load_users():
+    """Load users from JSON file"""
+    if os.path.exists(USERS_DB):
+        with open(USERS_DB, 'r') as f:
+            return json.load(f)
+    return {}
+
+def save_users(users):
+    """Save users to JSON file"""
+    with open(USERS_DB, 'w') as f:
+        json.dump(users, f, indent=2)
+
+def save_basket_for_user(username, items, total_cost):
+    """Save basket to user's account"""
+    users = load_users()
+    if username in users:
+        users[username]["saved_basket"] = [{"name": item, "added_at": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")} for item in items]
+        users[username]["last_total"] = round(total_cost, 2)
+        save_users(users)
+        return True
+    return False
 
 # 2. LOGIC: Distance & Cost Calculation
 def get_distance(lat1, lon1, lat2, lon2):
@@ -19,7 +51,18 @@ def get_distance(lat1, lon1, lat2, lon2):
 
 # 3. STREAMLIT UI
 st.set_page_config(page_title="ShopOptima", layout="wide")
-st.title("🛒 ShopOptima: Basket Optimizer")
+
+# Top navigation bar with login button
+col1, col2 = st.columns([0.85, 0.15])
+with col1:
+    st.title("🛒 ShopOptima: Basket Optimizer")
+with col2:
+    if st.button("👤 Login"):
+        st.switch_page("pages/login_page.py")
+
+# Display logged-in user info
+if st.session_state.logged_in and st.session_state.current_user:
+    st.info(f"✅ Logged in as: **{st.session_state.current_user}**")
 
 # Sidebar: User Inputs
 st.sidebar.header("Your Trip Details")
@@ -60,6 +103,21 @@ if selected_items:
     # 2. DISPLAY TABLE (Only do this once)
     st.subheader("Results: Best Value for your Trip")
     st.dataframe(df.drop(columns=['lat', 'lon']), use_container_width=True)
+    
+    # Save basket button (if logged in)
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.session_state.logged_in and st.session_state.current_user:
+            best_store = df.iloc[0]
+            if st.button("💾 Save This Basket to My Account"):
+                if save_basket_for_user(st.session_state.current_user, selected_items, best_store["Total (£)"]):
+                    st.success(f"✅ Basket saved! Best option: {best_store['Store']} (£{best_store['Total (£)']})")
+                else:
+                    st.error("Failed to save basket. Please login first.")
+    
+    with col2:
+        if st.button("➕ Start New Search"):
+            st.rerun()
 
     # 3. MAP VISUALIZATION
     st.subheader("Store Locations")
@@ -84,4 +142,4 @@ if selected_items:
     st_folium(m, width=700, height=400)
 
 else:
-    st.info("Please select some items to see the best store for your trip.")
+    st.info("📝 Please select some items to see the best store for your trip. 🔓 Login to save your favorite baskets!")
