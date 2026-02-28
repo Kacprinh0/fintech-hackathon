@@ -1,0 +1,38 @@
+{
+  "demo": {
+    "password": "hello",
+    "email": "demooo",
+    "saved_basket": [
+      {
+        "name": "eggs_6pk",
+        "added_at": "2026-02-28 16:13:25"
+      },
+      {
+        "name": "chicken_breast_1kg",
+        "added_at": "2026-02-28 16:13:25"
+      },
+      {
+        "name": "salmon_fillet_2pk",
+        "added_at": "2026-02-28 16:13:25"
+      },
+      {
+        "name": "minced_beef_500g",
+        "added_at": "2026-02-28 16:13:25"
+      },
+      {
+        "name": "yogurt_500g",
+        "added_at": "2026-02-28 16:13:25"
+      },
+      {
+        "name": "apples_6pk",
+        "added_at": "2026-02-28 16:13:25"
+      },
+      {
+        "name": "coffee_200g",
+        "added_at": "2026-02-28 16:13:25"
+      }
+    ],
+    "created_at": "2026-02-28 16:12:53",
+    "last_total": 20.72
+  }
+}
