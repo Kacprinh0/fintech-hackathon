@@ -5,6 +5,7 @@ from streamlit_folium import st_folium
 import math
 import json
 import os
+from datetime import datetime
 
 # 1. DATABASE (The Store-Centric JSON we built)
 with open('stores.json', 'r') as f:
@@ -32,11 +33,35 @@ def save_users(users):
         json.dump(users, f, indent=2)
 
 def save_basket_for_user(username, items, total_cost):
-    """Save basket to user's account"""
+    """Save basket to user's account.
+
+    We keep a history of baskets (with timestamps & total cost) so users
+    can revisit previous trips. Older installs may have a single
+    ``saved_basket`` list of items; we automatically migrate that data
+    into the new ``saved_baskets`` structure.
+    """
     users = load_users()
     if username in users:
-        users[username]["saved_basket"] = [{"name": item, "added_at": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")} for item in items]
-        users[username]["last_total"] = round(total_cost, 2)
+        user = users[username]
+        # migrate legacy format if necessary
+        if "saved_basket" in user and "saved_baskets" not in user:
+            # wrap the old flat list into a single basket
+            legacy = user.pop("saved_basket")
+            user["saved_baskets"] = [{
+                "items": [entry.get("name") for entry in legacy] if isinstance(legacy, list) else [],
+                "added_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "total": user.get("last_total")
+            }]
+        if "saved_baskets" not in user:
+            user["saved_baskets"] = []
+
+        new_basket = {
+            "items": items,
+            "added_at": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "total": round(total_cost, 2)
+        }
+        user["saved_baskets"].append(new_basket)
+        user["last_total"] = new_basket["total"]
         save_users(users)
         return True
     return False
@@ -73,7 +98,13 @@ fuel_cost_per_mile = st.sidebar.slider("Travel Cost (£/mile)", 0.10, 1.00, 0.45
 # Main Area: Shopping List
 # Grab items from the first store in your JSON list
 all_items = list(STORES_DB["stores"][0]["inventory"].keys())
-selected_items = st.multiselect("Build your shopping list:", all_items)
+
+# If a basket was loaded from another page (e.g. login_page), pre‑populate
+default_items = st.session_state.get("selected_items", [])
+selected_items = st.multiselect("Build your shopping list:", all_items, default=default_items)
+
+# keep session state up to date when the user interacts with the multiselect
+st.session_state["selected_items"] = selected_items
 
 if selected_items:
     results = []
@@ -117,6 +148,8 @@ if selected_items:
     
     with col2:
         if st.button("➕ Start New Search"):
+            # clear stored selections so the multiselect resets
+            st.session_state["selected_items"] = []
             st.rerun()
 
     # 3. MAP VISUALIZATION
