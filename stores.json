@@ -8,10 +8,10 @@
             "address": "22, Cannon Park Centre, Lynchgate Rd, Cannon Park, Coventry CV4 7EH"
         },
         "inventory": {
-            "milk_2L": 1.85,
+            "milk": 1.85,
             "bread": 0.55,
-            "eggs_6pk": 1.79,
-            "chicken_breast_1kg": 7.00
+            "eggs": 1.79,
+            "chicken breast": 7.00
         }
     },
     {
@@ -22,10 +22,10 @@
             "address": "7 Shultern Ln, Coventry CV4 7AN"
         },
         "inventory": {
-            "milk_2L": 1.65,
+            "milk": 1.65,
             "bread": 1.00,
-            "eggs_6pk": 1.59,
-            "chicken_breast_1kg": 6.00
+            "eggs": 1.59,
+            "chicken breast": 6.00
         }
     },
     {
@@ -36,10 +36,10 @@
             "address": "330 Fletchamstead Hwy, Coventry CV4 9BJ"
         },
         "inventory": {
-            "milk_2L": 1.75,
+            "milk": 1.75,
             "bread": 0.85,
-            "eggs_6pk": 1.60,
-            "chicken_breast_1kg": 6.50
+            "eggs": 1.60,
+            "chicken breast": 6.50
         }
     },
     {
@@ -50,10 +50,10 @@
             "address": "University of Warwick, Gibbet Hill Rd, Coventry CV4 7EQ"
         },
         "inventory": {
-            "milk_2L": 1.95,
+            "milk": 1.95,
             "bread": 1.20,
-            "eggs_6pk": 1.85,
-            "chicken_breast_1kg": 7.50
+            "eggs": 1.85,
+            "chicken breast": 7.50
         }
     }
   ]
