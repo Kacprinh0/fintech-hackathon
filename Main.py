@@ -4,6 +4,7 @@ import folium
 from streamlit_folium import st_folium
 import math
 import json
+import requests
 import os
 from datetime import datetime
 
@@ -91,8 +92,94 @@ if st.session_state.logged_in and st.session_state.current_user:
 
 # Sidebar: User Inputs
 st.sidebar.header("Your Trip Details")
-user_lat = st.sidebar.number_input("Your Latitude", value=52.400, format="%.4f")
-user_lon = st.sidebar.number_input("Your Longitude", value=-1.5500, format="%.4f")
+
+# Allow users to enter a single location field (lat, lon) or an address and optionally save it to their account
+def save_user_location(username, lat, lon):
+    users = load_users()
+    if username in users:
+        users[username]["home_location"] = {"lat": float(lat), "lon": float(lon)}
+        save_users(users)
+        return True
+    return False
+
+def geocode_address(address: str):
+    """Try to convert a free-text address into (lat, lon) using Nominatim OSM."""
+    try:
+        resp = requests.get(
+            "https://nominatim.openstreetmap.org/search",
+            params={"q": address, "format": "json", "limit": 1},
+            headers={"User-Agent": "Shoptimizer/1.0"},
+            timeout=5,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        if data:
+            lat = float(data[0]["lat"])
+            lon = float(data[0]["lon"])
+            return lat, lon
+    except Exception:
+        return None
+    return None
+
+# Determine defaults from account if logged in
+default_lat = 52.400
+default_lon = -1.5500
+if st.session_state.logged_in and st.session_state.current_user:
+    users = load_users()
+    user_data = users.get(st.session_state.current_user, {})
+    loc = user_data.get("home_location")
+    if loc and isinstance(loc, dict):
+        try:
+            default_lat = float(loc.get("lat", default_lat))
+            default_lon = float(loc.get("lon", default_lon))
+        except Exception:
+            pass
+
+loc_default_text = f"{default_lat:.4f}, {default_lon:.4f}"
+location_input = st.sidebar.text_input("Your location (coordinates or address)", value=loc_default_text)
+
+# parse location input
+def parse_location(text: str):
+    """Parse either a 'lat, lon' pair or recognise as address.
+
+    If text contains letters (and not comma-separated floats) we treat it as
+    an address and return None; geocoding is handled elsewhere.
+    """
+    try:
+        # quick numeric check
+        for sep in [",", " ", ";"]:
+            if sep in text and any(ch.isdigit() for ch in text):
+                parts = [p.strip() for p in text.split(sep) if p.strip()]
+                if len(parts) >= 2:
+                    return float(parts[0]), float(parts[1])
+        # fallback split
+        parts = text.split()
+        if len(parts) >= 2 and all(any(ch.isdigit() for ch in p) for p in parts[:2]):
+            return float(parts[0]), float(parts[1])
+    except Exception:
+        return None
+    return None
+
+parsed = parse_location(location_input)
+if parsed:
+    user_lat, user_lon = parsed
+else:
+    # try geocoding
+    geo = geocode_address(location_input)
+    if geo:
+        user_lat, user_lon = geo
+    else:
+        st.sidebar.error("Invalid location or address; please provide 'lat, lon' or a valid address.")
+        user_lat, user_lon = default_lat, default_lon
+
+# If logged in allow saving location to account
+if st.session_state.logged_in and st.session_state.current_user:
+    if st.sidebar.button("Save location to account"):
+        if parsed and save_user_location(st.session_state.current_user, user_lat, user_lon):
+            st.sidebar.success("Location saved to your account")
+        else:
+            st.sidebar.error("Failed to save location; ensure you're logged in and the coordinates are valid")
+
 fuel_cost_per_mile = st.sidebar.slider("Travel Cost (£/mile)", 0.10, 1.00, 0.45)
 
 # Main Area: Shopping List
