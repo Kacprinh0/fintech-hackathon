@@ -34,20 +34,13 @@ selected_items = st.multiselect("Build your shopping list:", all_items)
 
 if selected_items:
     results = []
-    # Note: We now loop through STORES_DB["stores"]
     for s in STORES_DB["stores"]:
-        # 1. Calculate Basket Price
         basket_price = sum(s["inventory"].get(item, 0) for item in selected_items)
-        
-        # 2. Extract Lat/Lon from the nested 'location' key
         store_lat = s["location"]["lat"]
         store_lon = s["location"]["lon"]
         
-        # 3. Calculate Travel
         dist = get_distance(user_lat, user_lon, store_lat, store_lon)
         travel_cost = (dist * 2) * fuel_cost_per_mile
-        
-        # 4. Total (Parking fee removed since it's not in your new JSON)
         total_cost = basket_price + travel_cost
         
         results.append({
@@ -61,22 +54,14 @@ if selected_items:
             "lon": store_lon
         })
 
-    # Create the DataFrame
+    # 1. CREATE AND SORT DATAFRAME (Only do this once)
     df = pd.DataFrame(results).sort_values("Total (£)")
     
-    # Display the results
-    st.subheader("Results: Best Value for your Trip")
-    # Hide lat/lon from the table view
-    st.dataframe(df.drop(columns=['lat', 'lon']), use_container_width=True)
-
-    # Sort by cheapest total
-    df = pd.DataFrame(results).sort_values("Total (£)")
-    
-    # Show Results Table
+    # 2. DISPLAY TABLE (Only do this once)
     st.subheader("Results: Best Value for your Trip")
     st.dataframe(df.drop(columns=['lat', 'lon']), use_container_width=True)
 
-    # MAP VISUALIZATION
+    # 3. MAP VISUALIZATION
     st.subheader("Store Locations")
     m = folium.Map(location=[user_lat, user_lon], zoom_start=13)
     
@@ -85,11 +70,14 @@ if selected_items:
     
     # Add Stores
     for i, row in df.iterrows():
-        color = 'green' if i == df.index[0] else 'blue'
+        # The first row in our sorted dataframe is the winner
+        is_winner = (row['Total (£)'] == df['Total (£)'].min())
+        color = 'green' if is_winner else 'blue'
+        
         folium.Marker(
             [row['lat'], row['lon']], 
             popup=f"{row['Store']}: £{row['Total (£)']}",
-            tooltip=row['Store'],
+            tooltip=f"{row['Store']} (£{row['Total (£)']})",
             icon=folium.Icon(color=color)
         ).add_to(m)
     
