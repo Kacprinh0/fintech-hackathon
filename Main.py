@@ -3,30 +3,11 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 import math
+import json
 
 # 1. DATABASE (The Store-Centric JSON we built)
-STORES_DB = {
-    "stores": [
-        {
-            "name": "Tesco Superstore",
-            "lat": 51.5074, "lon": -0.1278,
-            "inventory": {"milk": 1.20, "bread": 0.85, "eggs": 2.10, "apples": 2.00},
-            "parking_fee": 0.0
-        },
-        {
-            "name": "Waitrose & Partners",
-            "lat": 51.5150, "lon": -0.1400,
-            "inventory": {"milk": 1.55, "bread": 1.20, "eggs": 3.00, "apples": 2.50},
-            "parking_fee": 2.50
-        },
-        {
-            "name": "Asda Express",
-            "lat": 51.5000, "lon": -0.1100,
-            "inventory": {"milk": 1.15, "bread": 0.70, "eggs": 1.90, "apples": 2.20},
-            "parking_fee": 0.0
-        }
-    ]
-}
+with open('stores.json', 'r') as f:
+    STORES_DB = json.load(f)
 
 # 2. LOGIC: Distance & Cost Calculation
 def get_distance(lat1, lon1, lat2, lon2):
@@ -42,31 +23,51 @@ st.title("🛒 ShopOptima: Basket Optimizer")
 
 # Sidebar: User Inputs
 st.sidebar.header("Your Trip Details")
-user_lat = st.sidebar.number_input("Your Latitude", value=51.5090, format="%.4f")
-user_lon = st.sidebar.number_input("Your Longitude", value=-0.1300, format="%.4f")
+user_lat = st.sidebar.number_input("Your Latitude", value=52.400, format="%.4f")
+user_lon = st.sidebar.number_input("Your Longitude", value=-1.5500, format="%.4f")
 fuel_cost_per_mile = st.sidebar.slider("Travel Cost (£/mile)", 0.10, 1.00, 0.45)
 
 # Main Area: Shopping List
+# Grab items from the first store in your JSON list
 all_items = list(STORES_DB["stores"][0]["inventory"].keys())
-selected_items = st.multiselect("Build your shopping list:", all_items, default=["milk", "bread"])
+selected_items = st.multiselect("Build your shopping list:", all_items)
 
 if selected_items:
     results = []
+    # Note: We now loop through STORES_DB["stores"]
     for s in STORES_DB["stores"]:
-        # Calculate Costs
+        # 1. Calculate Basket Price
         basket_price = sum(s["inventory"].get(item, 0) for item in selected_items)
-        dist = get_distance(user_lat, user_lon, s["lat"], s["lon"])
+        
+        # 2. Extract Lat/Lon from the nested 'location' key
+        store_lat = s["location"]["lat"]
+        store_lon = s["location"]["lon"]
+        
+        # 3. Calculate Travel
+        dist = get_distance(user_lat, user_lon, store_lat, store_lon)
         travel_cost = (dist * 2) * fuel_cost_per_mile
-        total_cost = basket_price + travel_cost + s["parking_fee"]
+        
+        # 4. Total (Parking fee removed since it's not in your new JSON)
+        total_cost = basket_price + travel_cost
         
         results.append({
             "Store": s["name"],
+            "Address": s["location"]["address"],
             "Basket Price (£)": round(basket_price, 2),
             "Travel Cost (£)": round(travel_cost, 2),
             "Total (£)": round(total_cost, 2),
             "Distance (mi)": round(dist, 2),
-            "lat": s["lat"], "lon": s["lon"]
+            "lat": store_lat, 
+            "lon": store_lon
         })
+
+    # Create the DataFrame
+    df = pd.DataFrame(results).sort_values("Total (£)")
+    
+    # Display the results
+    st.subheader("Results: Best Value for your Trip")
+    # Hide lat/lon from the table view
+    st.dataframe(df.drop(columns=['lat', 'lon']), use_container_width=True)
 
     # Sort by cheapest total
     df = pd.DataFrame(results).sort_values("Total (£)")
