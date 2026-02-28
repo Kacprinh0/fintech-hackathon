@@ -1,18 +1,57 @@
 {
   "stores": [
     {
-        "name": "Tesco",
-        "location": {
-            "lat": 52.387225, 
-            "lon": -1.555230,
-            "address": "22, Cannon Park Centre, Lynchgate Rd, Cannon Park, Coventry CV4 7EH"
-        },
-        "inventory": {
-            "milk": 1.85,
-            "bread": 0.55,
-            "eggs": 1.79,
-            "chicken breast": 7.00
-        }
+      "id": 1,
+      "name": "Tesco",
+      "location": {
+        "lat": 52.387225,
+        "lon": -1.555230,
+        "address": "22, Cannon Park Centre, Lynchgate Rd, Cannon Park, Coventry CV4 7EH"
+      },
+      "inventory": {
+        "milk_2L": 1.85,
+        "bread_white_loaf": 0.55,
+        "bread_wholemeal_loaf": 0.65,
+        "eggs_6pk": 1.79,
+        "eggs_12pk": 2.95,
+        "chicken_breast_1kg": 7.00,
+        "chicken_thighs_1kg": 4.50,
+        "minced_beef_500g": 3.20,
+        "salmon_fillet_2pk": 4.75,
+        "rice_1kg": 1.40,
+        "pasta_500g": 0.75,
+        "spaghetti_500g": 0.80,
+        "tinned_tomatoes": 0.55,
+        "black_beans_tin": 0.65,
+        "kidney_beans_tin": 0.60,
+        "cheddar_400g": 3.00,
+        "mozzarella_125g": 0.85,
+        "butter_250g": 1.99,
+        "yogurt_500g": 1.45,
+        "greek_yogurt_500g": 2.00,
+        "apples_6pk": 1.50,
+        "bananas_1kg": 1.10,
+        "broccoli_head": 0.90,
+        "carrots_1kg": 0.70,
+        "onions_1kg": 0.95,
+        "potatoes_2kg": 2.25,
+        "bell_peppers_3pk": 1.85,
+        "cucumber": 0.75,
+        "lettuce": 0.70,
+        "orange_juice_1L": 1.80,
+        "cereal_500g": 2.50,
+        "oats_1kg": 1.30,
+        "peanut_butter_340g": 1.85,
+        "jam_454g": 1.20,
+        "coffee_200g": 3.50,
+        "tea_80bags": 2.40,
+        "sugar_1kg": 1.10,
+        "flour_1kg": 0.95,
+        "olive_oil_500ml": 3.90,
+        "frozen_pizza": 2.75,
+        "toilet_roll_9pk": 4.00,
+        "washing_up_liquid": 0.90
+      }
     },
     {
         "name": "Aldi",
@@ -22,10 +61,10 @@
             "address": "7 Shultern Ln, Coventry CV4 7AN"
         },
         "inventory": {
-            "milk": 1.65,
+            "milk_2L": 1.65,
             "bread": 1.00,
-            "eggs": 1.59,
-            "chicken breast": 6.00
+            "eggs_6pk": 1.59,
+            "chicken_breast_1kg": 6.00
         }
     },
     {
@@ -36,10 +75,10 @@
             "address": "330 Fletchamstead Hwy, Coventry CV4 9BJ"
         },
         "inventory": {
-            "milk": 1.75,
+            "milk_2L": 1.75,
             "bread": 0.85,
-            "eggs": 1.60,
-            "chicken breast": 6.50
+            "eggs_6pk": 1.60,
+            "chicken_breast_1kg": 6.50
         }
     },
     {
@@ -50,10 +89,10 @@
             "address": "University of Warwick, Gibbet Hill Rd, Coventry CV4 7EQ"
         },
         "inventory": {
-            "milk": 1.95,
+            "milk_2L": 1.95,
             "bread": 1.20,
-            "eggs": 1.85,
-            "chicken breast": 7.50
+            "eggs_6pk": 1.85,
+            "chicken_breast_1kg": 7.50
         }
     }
   ]
