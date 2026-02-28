@@ -3,7 +3,7 @@
     "password": "hello",
     "email": "demooo",
     "created_at": "2026-02-28 16:12:53",
-    "last_total": 20.72,
+    "last_total": 8.28,
     "saved_baskets": [
       {
         "items": [
@@ -17,6 +17,15 @@
         ],
         "added_at": "2026-02-28 16:13:25",
         "total": 20.72
+      },
+      {
+        "items": [
+          "bread_wholemeal_loaf",
+          "eggs_12pk",
+          "salmon_fillet_2pk"
+        ],
+        "added_at": "2026-02-28 17:19:37",
+        "total": 8.28
       }
     ]
   },

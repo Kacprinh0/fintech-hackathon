@@ -80,9 +80,9 @@ st.set_page_config(page_title="Shoptimizer", layout="wide")
 # Top navigation bar with login button
 col1, col2 = st.columns([0.85, 0.15])
 with col1:
-    st.title("🛒 Shoptimizer: Basket Optimizer")
+    st.title("Shoptimizer: Basket Optimizer")
 with col2:
-    if st.button("👤 Login"):
+    if st.button("Login"):
         st.switch_page("pages/login_page.py")
 
 # Display logged-in user info
@@ -140,14 +140,14 @@ if selected_items:
     with col1:
         if st.session_state.logged_in and st.session_state.current_user:
             best_store = df.iloc[0]
-            if st.button("💾 Save This Basket to My Account"):
+            if st.button("Save This Basket to My Account"):
                 if save_basket_for_user(st.session_state.current_user, selected_items, best_store["Total (£)"]):
-                    st.success(f"✅ Basket saved! Best option: {best_store['Store']} (£{best_store['Total (£)']})")
+                    st.success(f"Basket saved! Best option: {best_store['Store']} (£{best_store['Total (£)']})")
                 else:
                     st.error("Failed to save basket. Please login first.")
     
     with col2:
-        if st.button("➕ Start New Search"):
+        if st.button("Start New Search"):
             # clear stored selections so the multiselect resets
             st.session_state["selected_items"] = []
             st.rerun()
@@ -175,4 +175,4 @@ if selected_items:
     st_folium(m, width=700, height=400)
 
 else:
-    st.info("📝 Please select some items to see the best store for your trip. 🔓 Login to save your favorite baskets!")
+    st.info("Please select some items to see the best store for your trip. Login to save your favorite baskets!")

@@ -57,20 +57,20 @@ st.set_page_config(page_title="ShopOptima - Login", layout="wide")
 # Add navigation button to main page
 col1, col2 = st.columns([0.9, 0.1])
 with col2:
-    if st.button("🏠 Home"):
+    if st.button("Home"):
         st.switch_page("Main.py")
 
-st.title("🔐 ShopOptima: User Login")
+st.title("Shoptimizer: User Login")
 
 # Check if already logged in
 if st.session_state.logged_in:
-    st.success(f"Welcome back, {st.session_state.current_user}! 👋")
+    st.success(f"Welcome back, {st.session_state.current_user}!")
     
     users = load_users()
     user_data = users.get(st.session_state.current_user, {})
     
     # Display saved baskets (history)
-    st.subheader("📦 Your Saved Baskets")
+    st.subheader("Your Saved Baskets")
     
     # handle legacy format where we only kept a flat list
     if "saved_basket" in user_data and "saved_baskets" not in user_data:
@@ -101,7 +101,7 @@ if st.session_state.logged_in:
         st.info("You haven't saved any baskets yet. Create one on the home page!")
     
     # User account details
-    st.subheader("👤 Account Details")
+    st.subheader("Account Details")
     col1, col2 = st.columns(2)
     with col1:
         st.text(f"Username: {st.session_state.current_user}")
@@ -109,7 +109,7 @@ if st.session_state.logged_in:
         st.text(f"Email: {user_data.get('email', 'N/A')}")
     
     # Logout button
-    if st.button("🚪 Logout"):
+    if st.button("Logout"):
         st.session_state.logged_in = False
         st.session_state.current_user = None
         st.rerun()
