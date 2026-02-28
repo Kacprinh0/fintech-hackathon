@@ -45,8 +45,8 @@
     {
         "name": "Co-op",
         "location": {
-            "lat": 52.398000,
-            "lon": -1.552000,
+            "lat": 52.379480,
+            "lon": -1.560448,
             "address": "University of Warwick, Gibbet Hill Rd, Coventry CV4 7EQ"
         },
         "inventory": {
