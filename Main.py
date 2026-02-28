@@ -50,12 +50,12 @@ def get_distance(lat1, lon1, lat2, lon2):
     return radius * (2 * math.atan2(math.sqrt(a), math.sqrt(1-a)))
 
 # 3. STREAMLIT UI
-st.set_page_config(page_title="ShopOptima", layout="wide")
+st.set_page_config(page_title="Shoptimizer", layout="wide")
 
 # Top navigation bar with login button
 col1, col2 = st.columns([0.85, 0.15])
 with col1:
-    st.title("🛒 ShopOptima: Basket Optimizer")
+    st.title("🛒 Shoptimizer: Basket Optimizer")
 with col2:
     if st.button("👤 Login"):
         st.switch_page("pages/login_page.py")

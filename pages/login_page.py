@@ -58,7 +58,7 @@ st.set_page_config(page_title="ShopOptima - Login", layout="wide")
 col1, col2 = st.columns([0.9, 0.1])
 with col2:
     if st.button("🏠 Home"):
-        st.switch_page("main.py")
+        st.switch_page("Main.py")
 
 st.title("🔐 ShopOptima: User Login")
 
@@ -78,7 +78,7 @@ if st.session_state.logged_in:
         
         if st.button("Use This Basket"):
             st.session_state.selected_items = [item["name"] for item in saved_basket]
-            st.switch_page("main.py")
+            st.switch_page("Main.py")
     else:
         st.info("You haven't saved any baskets yet. Create one on the home page!")
     
