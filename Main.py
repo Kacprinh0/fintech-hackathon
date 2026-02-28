@@ -132,7 +132,7 @@ if selected_items:
     df = pd.DataFrame(results).sort_values("Total (£)")
     
     # 2. DISPLAY TABLE (Only do this once)
-    st.subheader("Results: Best Value for your Trip")
+    st.subheader("Results:")
     st.dataframe(df.drop(columns=['lat', 'lon']), use_container_width=True)
     
     # Save basket button (if logged in)
