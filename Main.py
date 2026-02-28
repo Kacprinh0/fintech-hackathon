@@ -18,8 +18,8 @@ def get_distance(lat1, lon1, lat2, lon2):
     return radius * (2 * math.atan2(math.sqrt(a), math.sqrt(1-a)))
 
 # 3. STREAMLIT UI
-st.set_page_config(page_title="ShopOptima", layout="wide")
-st.title("🛒 ShopOptima: Basket Optimizer")
+st.set_page_config(page_title="Shoptimizer", layout="wide")
+st.title("🛒 Shoptimizer")
 
 # Sidebar: User Inputs
 st.sidebar.header("Your Trip Details")
