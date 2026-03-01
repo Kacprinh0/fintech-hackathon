@@ -178,7 +178,7 @@ else:
         st.sidebar.error("Invalid location or address; please provide 'lat, lon' or a valid address.")
         user_lat, user_lon = default_lat, default_lon
 
-fuel_cost_per_mile = st.sidebar.slider("Travel Cost (£/mile)", 0.10, 1.00, 0.45)
+fuel_cost_per_mile = st.sidebar.slider("Travel Cost (£/mile)", 0.00, 1.00, 0.45)
 
 # Main Area: Shopping List
 # Grab items from the first store in your JSON list
