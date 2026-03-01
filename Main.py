@@ -83,8 +83,14 @@ col1, col2 = st.columns([0.85, 0.15])
 with col1:
     st.title("Shoptimizer: Basket Optimizer")
 with col2:
-    if st.button("Login"):
-        st.switch_page("pages/login_page.py")
+    if st.session_state.logged_in:
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.current_user = None
+            st.success("Logged out successfully.")
+    else:
+        if st.button("Login"):
+            st.switch_page("pages/login_page.py")
 
 # Display logged-in user info
 if st.session_state.logged_in and st.session_state.current_user:
@@ -171,14 +177,6 @@ else:
     else:
         st.sidebar.error("Invalid location or address; please provide 'lat, lon' or a valid address.")
         user_lat, user_lon = default_lat, default_lon
-
-# If logged in allow saving location to account
-if st.session_state.logged_in and st.session_state.current_user:
-    if st.sidebar.button("Save location to account"):
-        if parsed and save_user_location(st.session_state.current_user, user_lat, user_lon):
-            st.sidebar.success("Location saved to your account")
-        else:
-            st.sidebar.error("Failed to save location; ensure you're logged in and the coordinates are valid")
 
 fuel_cost_per_mile = st.sidebar.slider("Travel Cost (£/mile)", 0.10, 1.00, 0.45)
 
